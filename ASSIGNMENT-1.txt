@@ -11,64 +11,64 @@ ASSIGNMENT-1
 9.  SELECT sysdate AS system_date FROM dual;
 10. SELECT AVG(sal) FROM emp;
 11. SELECT deptno,COUNT(*) AS employee_count
-FROM emp
-GROUP BY deptno;
+    FROM emp
+    GROUP BY deptno;
 12. SELECT deptno,sum(sal) AS total_salary
-FROM emp
-GROUP BY deptno;
+    FROM emp
+    GROUP BY deptno;
 13. SELECT job,COUNT(*) AS Number_of_employees
-FROM emp
-GROUP BY job;
+    FROM emp
+    GROUP BY job;
 14. SELECT job,AVG(sal) AS Average_Salary
-FROM emp
-GROUP BY job;
+    FROM emp
+    GROUP BY job;
 15. SELECT ename, extract(DAY FROM hiredate) AS DAY,extract(MONTH FROM hiredate) AS MONTH,extract(YEAR FROM hiredate) AS YEAR
-FROM emp
-ORDER BY 1;
+    FROM emp
+    ORDER BY 1;
 16. SELECT ename,deptno
-FROM emp
-ORDER BY deptno;
+    FROM emp
+    ORDER BY deptno;
 17. SELECT ename,job
-FROM emp
-ORDER BY job;
+    FROM emp
+    ORDER BY job;
 18. SELECT ename,sal
-FROM emp
-ORDER BY 2 desc;
+    FROM emp
+    ORDER BY 2 desc;
 19. SELECT ename,deptno,sal
-FROM emp
-ORDER BY 2,3 desc;
+    FROM emp
+    ORDER BY 2,3 desc;
 20. SELECT COUNT(ename) FROM emp
-WHERE length(ename)=6;
+    WHERE length(ename)=6;
 20. SELECT max(sal),min(sal) FROM emp;
 21. SELECT deptno,max(sal),min(sal),avg(sal),sum(sal)
-FROM emp
-GROUP BY deptno
-ORDER BY 1;
+    FROM emp
+    GROUP BY deptno
+    ORDER BY 1;
 22. SELECT ename,hiredate
-FROM emp
-ORDER BY hiredate;
+    FROM emp
+    ORDER BY hiredate;
 23. SELECT * FROM emp WHERE hiredate = (SELECT MAX(hiredate) FROM emp);
 24. SELECT * FROM emp WHERE hiredate = (SELECT MIN(hiredate) FROM emp);
 25. SELECT ename,to_char(hiredate,'YYYY') AS Hire_Year,deptno
-FROM emp
-ORDER BY 3,2 desc;
+    FROM emp
+    ORDER BY 3,2 desc;
 26. SELECT *
-FROM emp
-WHERE sal >= (SELECT AVG(sal) FROM emp)
-ORDER BY sal desc;
+    FROM emp
+    WHERE sal >= (SELECT AVG(sal) FROM emp)
+    ORDER BY sal desc;
 27. SELECT *
-FROM emp
-WHERE sal <= (SELECT AVG(sal) FROM emp)
-ORDER BY sal;
+    FROM emp
+    WHERE sal <= (SELECT AVG(sal) FROM emp)
+    ORDER BY sal;
 28. SELECT *
-FROM emp
-WHERE sal BETWEEN 2000 AND 4000;
+    FROM emp
+    WHERE sal BETWEEN 2000 AND 4000;
 29. SELECT *
-FROM emp
-WHERE sal=(SELECT max(sal) FROM emp)
-UNION
-SELECT *
-FROM emp
-WHERE sal=(SELECT min(sal) FROM emp);
+    FROM emp
+    WHERE sal=(SELECT max(sal) FROM emp)
+    UNION
+    SELECT *
+    FROM emp
+    WHERE sal=(SELECT min(sal) FROM emp);
 30. SELECT COUNT(*) AS Gifts_Needed FROM emp
-WHERE EXTRACT(MONTH FROM hiredate) = EXTRACT(MONTH FROM ADD_MONTHS(SYSDATE, 1));
+    WHERE EXTRACT(MONTH FROM hiredate) = EXTRACT(MONTH FROM ADD_MONTHS(SYSDATE, 1));

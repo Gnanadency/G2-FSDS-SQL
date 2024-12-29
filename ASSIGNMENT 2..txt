@@ -1,4 +1,4 @@
-ASSIGNMENT 2
+--ASSIGNMENT 2
 
 select * from Continents;
 select * from Countries;

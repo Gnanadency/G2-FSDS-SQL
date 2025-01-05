@@ -1,0 +1,97 @@
+--ASSIGNMENT 3
+
+select * from DEMO_STATES;
+select * from DEMO_CUSTOMERS;
+select * from DEMO_ORDERS;
+select * from DEMO_PRODUCTS;
+select * from DEMO_ORDER_ITEMS;
+
+
+--1. Top 3 customers based on the amount spent:
+
+SELECT c.cust_first_name, c.cust_last_name, SUM(oi.quantity * oi.unit_price) AS total_spent
+FROM DEMO_CUSTOMERS c
+JOIN DEMO_ORDERS o ON c.customer_id = o.customer_id
+JOIN DEMO_ORDER_ITEMS oi ON o.order_id = oi.order_id
+GROUP BY c.cust_first_name, c.cust_last_name
+ORDER BY total_spent DESC
+FETCH FIRST 3 ROWS ONLY;
+
+--2. Top 3 customers based on the number of orders:
+
+SELECT c.cust_first_name, c.cust_last_name, COUNT(o.order_id) AS order_count
+FROM DEMO_CUSTOMERS c
+JOIN DEMO_ORDERS o ON c.customer_id = o.customer_id
+GROUP BY c.cust_first_name, c.cust_last_name
+ORDER BY order_count DESC
+FETCH FIRST 3 ROWS ONLY;
+
+--3. Top 3 products based on quantity sold:
+
+SELECT p.product_name, SUM(oi.quantity) AS total_quantity
+FROM DEMO_PRODUCTS p
+JOIN DEMO_ORDER_ITEMS oi ON p.product_id = oi.product_id
+GROUP BY p.product_name
+ORDER BY total_quantity DESC
+FETCH FIRST 3 ROWS ONLY;
+
+--4. Customer's last name, product names (he bought) and total quantity of each of them:
+
+SELECT c.cust_last_name, p.product_name, SUM(oi.quantity) AS total_quantity
+FROM DEMO_CUSTOMERS c
+JOIN DEMO_ORDERS o ON c.customer_id = o.customer_id
+JOIN DEMO_ORDER_ITEMS oi ON o.order_id = oi.order_id
+JOIN DEMO_PRODUCTS p ON oi.product_id = p.product_id
+GROUP BY c.cust_last_name, p.product_name;
+    
+--5. Transform rows to columns for the result of Query 4:
+
+WITH customer_product_quantities AS (
+    SELECT c.cust_last_name, p.product_name, SUM(oi.quantity) AS total_quantity
+    FROM DEMO_CUSTOMERS c
+    JOIN DEMO_ORDERS o ON c.customer_id = o.customer_id
+    JOIN DEMO_ORDER_ITEMS oi ON o.order_id = oi.order_id
+    JOIN DEMO_PRODUCTS p ON oi.product_id = p.product_id
+    GROUP BY c.cust_last_name, p.product_name
+)
+SELECT *
+FROM customer_product_quantities
+PIVOT (
+    SUM(total_quantity)
+    FOR product_name IN ('Business Shirt', 'Trousers', 'Jacket', 'Blouse', 'Skirt', 'Ladies Shoes', 'Belt', 'Bag', 'Mens Shoes', 'Wallet')
+);
+    
+--6. Which year had most orders:
+
+SELECT EXTRACT(YEAR FROM o.order_timestamp) AS order_year, COUNT(o.order_id) AS order_count
+FROM DEMO_ORDERS o
+GROUP BY EXTRACT(YEAR FROM o.order_timestamp)
+ORDER BY order_count DESC
+FETCH FIRST 1 ROW ONLY;
+
+--8. Which product category was most sold:
+
+SELECT p.category, SUM(oi.quantity) AS total_quantity
+FROM DEMO_PRODUCTS p
+JOIN DEMO_ORDER_ITEMS oi ON p.product_id = oi.product_id
+GROUP BY p.category
+ORDER BY total_quantity DESC
+FETCH FIRST 1 ROW ONLY;
+    
+--9. Which product category took the second position in terms of quantity sold:
+
+SELECT p.category, SUM(oi.quantity) AS total_quantity
+FROM DEMO_PRODUCTS p
+JOIN DEMO_ORDER_ITEMS oi ON p.product_id = oi.product_id
+GROUP BY p.category
+ORDER BY total_quantity DESC
+OFFSET 1 ROW FETCH NEXT 1 ROW ONLY;
+    
+--10. Rollup total quantity on customer and product (name):
+
+SELECT c.cust_last_name, p.product_name, SUM(oi.quantity) AS total_quantity
+FROM DEMO_CUSTOMERS c
+JOIN DEMO_ORDERS o ON c.customer_id = o.customer_id
+JOIN DEMO_ORDER_ITEMS oi ON o.order_id = oi.order_id
+JOIN DEMO_PRODUCTS p ON oi.product_id = p.product_id
+GROUP BY ROLLUP(c.cust_last_name, p.product_name);
